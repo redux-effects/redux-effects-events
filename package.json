@@ -1,5 +1,5 @@
 {
-  "name": "@redux-effects/redux-effects-events",
+  "name": "redux-effects-events",
   "description": "Setup event listeners for various things",
   "repository": "git://github.com/redux-effects/redux-effects-events.git",
   "version": "0.1.0",
