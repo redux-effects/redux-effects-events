@@ -7,7 +7,55 @@ Setup event listeners for various things
 
 ## Installation
 
-    $ npm install @redux-effects/redux-effects-events
+    $ npm install redux-effects-events
+
+## Usage
+
+Provides access to a variety of events on `window` and `document`:
+
+  * `resize`
+  * `scroll`
+  * `DOMContentLoaded`
+  * `load`
+  * `unload`
+  * `beforeunload'
+  * `popstate`
+
+Unbinding handlers works similarly to `setTimeout`/`setInterval`.  Binding a handler will return an id wrapped in a declarative-promise.  You can store that id, and then use it to unbind your handler later:
+
+```javascript
+import listen from 'declarative-events'
+import {createAction} from 'redux-actions'
+
+function initialize () {
+  return listen('DOMContentLoaded', loadApp)
+    .then(boundLoadedListener)
+}
+
+const loadApp = createAction('LOAD_APP')
+const boundLoadedListener = createAction('BOUND_LOADED_LISTENER')
+const clearLoadedListener = createAction('CLEAR_LOADED_LISTENER')
+
+// ... In your state reducers...
+
+function reduce (state, action) {
+  if (action.type === 'BOUND_LOADED_LISTENER') {
+    return {...state, loadedListenerId: action.payload}
+  } else if (action.type === 'CLEAR_LOADED_LISTENER') {
+    return {...state, loadedListenerId: null}
+  } else if (action.type === 'LOAD_APP') {
+    return {...state, loaded: true}
+  }
+}
+
+// ... In your main app...
+
+function onStateChange (state) {
+  if (state.loaded && state.loadedListenerId) {
+    dispatch(clearLoadedListenerId())
+  }
+}
+```
 
 ## License
 
