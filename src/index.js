@@ -3,13 +3,13 @@
  */
 
 const types = {
-  RESIZE: 'resize',
-  SCROLL: 'scroll',
-  POPSTATE: 'popstate',
-  UNLOAD: 'unload',
-  LOAD: 'load',
-  BEFORE_UNLOAD: 'beforeunload',
-  DOM_CONTENT_LOADED: 'DOMContentLoaded'
+  HANDLE_RESIZE: 'resize',
+  HANDLE_SCROLL: 'scroll',
+  HANDLE_POPSTATE: 'popstate',
+  HANDLE_UNLOAD: 'unload',
+  HANDLE_LOAD: 'load',
+  HANDLE_BEFORE_UNLOAD: 'beforeunload',
+  HANDLE_DOM_CONTENT_LOADED: 'DOMContentLoaded'
 }
 
 const docEvents = ['DOMContentLoaded']
