@@ -28,7 +28,7 @@ function eventMiddleware ({wnd=window, doc=document}) {
       : next(effect)
 
   function handle (dispatch, effect) {
-    if (effect.type.slice(2) !== 'UN') {
+    if (effect.type.slice(0, 2) !== 'UN') {
       const evt = types[effect.type]
       const el = isDocEvent(evt) ? doc : wnd
       const fn = compose(dispatch, effect.cb)
@@ -38,7 +38,7 @@ function eventMiddleware ({wnd=window, doc=document}) {
       map[id] = fn
       return id
     } else {
-      const evt = types[effect.type.slice(3)]
+      const evt = types[effect.type.slice(0, 2)]
       const el = isDocEvent(evt) ? doc : wnd
       const id = effect.value
 
