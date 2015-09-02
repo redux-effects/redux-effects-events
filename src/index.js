@@ -28,7 +28,7 @@ function eventMiddleware ({wnd=window, doc=document}) {
       : next(effect)
 
   function handle (dispatch, effect) {
-    if (effect.type.slice(3) !== 'OFF') {
+    if (effect.type.slice(2) !== 'UN') {
       const evt = types[effect.type]
       const el = isDocEvent(evt) ? doc : wnd
       const fn = compose(dispatch, effect.cb)
