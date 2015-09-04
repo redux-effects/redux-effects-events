@@ -9,7 +9,8 @@ const types = {
   HANDLE_UNLOAD: 'unload',
   HANDLE_LOAD: 'load',
   HANDLE_BEFORE_UNLOAD: 'beforeunload',
-  HANDLE_DOM_CONTENT_LOADED: 'DOMContentLoaded'
+  HANDLE_DOM_CONTENT_LOADED: 'DOMContentLoaded',
+  HANDLE_DOM_READY: 'DOMContentLoaded'
 }
 
 const docEvents = ['DOMContentLoaded']
@@ -29,13 +30,23 @@ function eventMiddleware ({wnd=window, doc=document}) {
 
   function handle (dispatch, effect) {
     if (effect.type.slice(0, 2) !== 'UN') {
+      const fn = compose(dispatch, effect.cb)
+
+      if (effect.type === 'HANDLE_DOM_READY') {
+        const hack = doc.documentElement.doScroll
+        if ((hack ? /^loaded|^c/ : /^loaded|^i|^c/).test(doc.readyState)) {
+          fn()
+          return
+        }
+      }
+
       const evt = types[effect.type]
       const el = isDocEvent(evt) ? doc : wnd
-      const fn = compose(dispatch, effect.cb)
       const id = idGen()
 
       el.addEventListener(evt, fn)
       map[id] = fn
+
       return id
     } else {
       const evt = types[effect.type.slice(0, 2)]
