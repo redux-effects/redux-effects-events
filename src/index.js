@@ -25,7 +25,7 @@ function eventMiddleware ({wnd = window, doc = document}) {
   const idGen = idGenerator()
 
   return ({dispatch, getState}) => next => effect =>
-    typeList.hasOwnProperty(effect.type)
+    typeList.indexOf(effect.type) !== -1
       ? handle(dispatch, effect)
       : next(effect)
 
