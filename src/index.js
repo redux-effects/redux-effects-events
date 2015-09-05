@@ -14,17 +14,18 @@ const types = {
 }
 
 const docEvents = ['DOMContentLoaded']
+const typeList = Object.keys(types).reduce((memo, type) => memo.concat([type, 'UN' + type]), [])
 
 /**
  * Events
  */
 
-function eventMiddleware ({wnd=window, doc=document}) {
+function eventMiddleware ({wnd = window, doc = document}) {
   const map = {}
   const idGen = idGenerator()
 
   return ({dispatch, getState}) => next => effect =>
-    types.hasOwnProperty(effect.type)
+    typeList.hasOwnProperty(effect.type)
       ? handle(dispatch, effect)
       : next(effect)
 
