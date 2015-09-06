@@ -29,7 +29,7 @@ import {createAction} from 'redux-actions'
 
 function initialize () {
   return listen('DOMContentLoaded', loadApp)
-    .then(boundLoadedListener)
+    .step(boundLoadedListener)
 }
 
 const loadApp = createAction('LOAD_APP')
