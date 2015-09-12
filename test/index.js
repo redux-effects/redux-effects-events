@@ -14,7 +14,7 @@ test('should work', ({pass, end}) => {
   const doc = new Wnd()
   const mw = events({wnd, doc})({dispatch: () => {}, getState: () => {}})(() => {})
 
-  mw({type: 'HANDLE_LOAD', cb: () => pass()})
+  mw({type: 'HANDLE_LOAD', payload: {cb: () => pass()}})
   wnd.emit('load')
   end()
 })

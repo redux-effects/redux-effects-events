@@ -24,16 +24,16 @@ function eventMiddleware ({wnd = window, doc = document}) {
   const map = {}
   const idGen = idGenerator()
 
-  return ({dispatch, getState}) => next => effect =>
-    typeList.indexOf(effect.type) !== -1
-      ? Promise.resolve(handle(dispatch, effect))
-      : next(effect)
+  return ({dispatch, getState}) => next => action =>
+    typeList.indexOf(action.type) !== -1
+      ? Promise.resolve(handle(dispatch, action))
+      : next(action)
 
-  function handle (dispatch, effect) {
-    if (effect.type.slice(0, 2) !== 'UN') {
-      const fn = compose(dispatch, effect.cb)
+  function handle (dispatch, action) {
+    if (action.type.slice(0, 2) !== 'UN') {
+      const fn = compose(dispatch, action.payload.cb)
 
-      if (effect.type === 'HANDLE_DOM_READY') {
+      if (action.type === 'HANDLE_DOM_READY') {
         const hack = doc.documentElement.doScroll
         if ((hack ? /^loaded|^c/ : /^loaded|^i|^c/).test(doc.readyState)) {
           fn()
@@ -41,7 +41,7 @@ function eventMiddleware ({wnd = window, doc = document}) {
         }
       }
 
-      const evt = types[effect.type]
+      const evt = types[action.type]
       const el = isDocEvent(evt) ? doc : wnd
       const id = idGen()
 
@@ -50,9 +50,9 @@ function eventMiddleware ({wnd = window, doc = document}) {
 
       return id
     } else {
-      const evt = types[effect.type.slice(0, 2)]
+      const evt = types[action.type.slice(0, 2)]
       const el = isDocEvent(evt) ? doc : wnd
-      const id = effect.value
+      const id = action.payload.value
 
       el.removeEventListener(evt, map[id])
       delete map[id]
