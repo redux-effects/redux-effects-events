@@ -26,7 +26,7 @@ function eventMiddleware ({wnd = window, doc = document}) {
 
   return ({dispatch, getState}) => next => effect =>
     typeList.indexOf(effect.type) !== -1
-      ? handle(dispatch, effect)
+      ? Promise.resolve(handle(dispatch, effect))
       : next(effect)
 
   function handle (dispatch, effect) {
