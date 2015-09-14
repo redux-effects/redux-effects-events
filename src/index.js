@@ -3,6 +3,7 @@
  */
 
 const types = {
+  HANDLE_CLICK: 'click',
   HANDLE_RESIZE: 'resize',
   HANDLE_SCROLL: 'scroll',
   HANDLE_POPSTATE: 'popstate',
@@ -13,7 +14,7 @@ const types = {
   HANDLE_DOM_READY: 'DOMContentLoaded'
 }
 
-const docEvents = ['DOMContentLoaded']
+const docEvents = ['DOMContentLoaded', 'click']
 const typeList = Object.keys(types).reduce((memo, type) => memo.concat([type, 'UN' + type]), [])
 
 /**
