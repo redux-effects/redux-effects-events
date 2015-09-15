@@ -30,8 +30,8 @@ function eventMiddleware ({wnd = window, doc = document}) {
 
         if (once) {
           fn = e => {
-            dispatch(cb(e))
             dispatch({type: UNHANDLE_EVENT, payload: {id, event}})
+            dispatch(cb(e))
           }
         }
 
