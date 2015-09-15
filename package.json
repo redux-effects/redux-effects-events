@@ -2,7 +2,7 @@
   "name": "redux-effects-events",
   "description": "Setup event listeners for various things",
   "repository": "git://github.com/redux-effects/redux-effects-events.git",
-  "version": "0.1.12",
+  "version": "0.2.0",
   "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
