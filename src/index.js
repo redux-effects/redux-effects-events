@@ -2,20 +2,9 @@
  * Vars
  */
 
-const types = {
-  HANDLE_CLICK: 'click',
-  HANDLE_RESIZE: 'resize',
-  HANDLE_SCROLL: 'scroll',
-  HANDLE_POPSTATE: 'popstate',
-  HANDLE_UNLOAD: 'unload',
-  HANDLE_LOAD: 'load',
-  HANDLE_BEFORE_UNLOAD: 'beforeunload',
-  HANDLE_DOM_CONTENT_LOADED: 'DOMContentLoaded',
-  HANDLE_DOM_READY: 'DOMContentLoaded'
-}
-
+const HANDLE_EVENT = 'HANDLE_EVENT'
+const UNHANDLE_EVENT = 'UNHANDLE_EVENT'
 const docEvents = ['DOMContentLoaded', 'click']
-const typeList = Object.keys(types).reduce((memo, type) => memo.concat([type, 'UN' + type]), [])
 
 /**
  * Events
@@ -26,37 +15,43 @@ function eventMiddleware ({wnd = window, doc = document}) {
   const idGen = idGenerator()
 
   return ({dispatch, getState}) => next => action =>
-    typeList.indexOf(action.type) !== -1
+    action.type === HANDLE_EVENT || action.type === UNHANDLE_EVENT
       ? Promise.resolve(handle(dispatch, action))
       : next(action)
 
   function handle (dispatch, action) {
-    if (action.type.slice(0, 2) !== 'UN') {
-      const fn = compose(dispatch, action.payload.cb)
+    let {id, event, cb, once} = action.payload
+    const el = isDocEvent(event) ? doc : wnd
 
-      if (action.type === 'HANDLE_DOM_READY') {
-        const hack = doc.documentElement.doScroll
-        if ((hack ? /^loaded|^c/ : /^loaded|^i|^c/).test(doc.readyState)) {
-          fn()
-          return
+    switch (action.type) {
+      case HANDLE_EVENT:
+        id = idGen()
+        let fn = compose(dispatch, cb)
+
+        if (once) {
+          fn = e => {
+            dispatch(cb(e))
+            dispatch({type: UNHANDLE_EVENT, payload: {id, event}})
+          }
         }
-      }
 
-      const evt = types[action.type]
-      const el = isDocEvent(evt) ? doc : wnd
-      const id = idGen()
+        if (event === 'domready') {
+          const hack = doc.documentElement.doScroll
+          if ((hack ? /^loaded|^c/ : /^loaded|^i|^c/).test(doc.readyState)) {
+            fn()
+            return
+          }
 
-      el.addEventListener(evt, fn)
-      map[id] = fn
+          event = 'DOMContentLoaded'
+        }
 
-      return id
-    } else {
-      const evt = types[action.type.slice(0, 2)]
-      const el = isDocEvent(evt) ? doc : wnd
-      const id = action.payload.value
-
-      el.removeEventListener(evt, map[id])
-      delete map[id]
+        el.addEventListener(event, fn)
+        map[id] = fn
+        return id
+      case UNHANDLE_EVENT:
+        el.removeEventListener(event, map[id])
+        delete map[id]
+        return
     }
   }
 }
