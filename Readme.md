@@ -11,25 +11,17 @@ Setup event listeners for various things
 
 ## Usage
 
-Provides access to a variety of events on `window` and `document`:
+Provides access to event listeners on `window` and `document`.  Right now the library itself decides which events go where, you cannot specify.  Currently `click` and `DOMContentLoaded` go on `document` and all others go on `window`.
 
-  * `resize`
-  * `scroll`
-  * `DOMContentLoaded`
-  * `load`
-  * `unload`
-  * `beforeunload'
-  * `popstate`
-
-Unbinding handlers works similarly to `setTimeout`/`setInterval`.  Binding a handler will return an id wrapped in a declarative-promise.  You can store that id, and then use it to unbind your handler later:
+Unbinding handlers works similarly to `setTimeout`/`setInterval`.  Binding a handler will return an id to your composed effect handlers.  You can store that id, and then use it to unbind your handler later:
 
 ```javascript
 import listen from 'declarative-events'
+import bind from 'bind-effect'
 import {createAction} from 'redux-actions'
 
 function initialize () {
-  return listen('DOMContentLoaded', loadApp)
-    .step(boundLoadedListener)
+  return bind(listen('DOMContentLoaded', loadApp), boundLoadedListener)
 }
 
 const loadApp = createAction('LOAD_APP')
