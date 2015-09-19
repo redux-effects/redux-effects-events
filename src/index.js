@@ -55,7 +55,7 @@ function eventMiddleware (globals = {}) {
         return
     }
 
-    function maybeDispatch(action) {
+    function maybeDispatch (action) {
       action && dispatch(action)
     }
   }
