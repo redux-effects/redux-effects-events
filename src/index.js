@@ -10,7 +10,8 @@ const docEvents = ['DOMContentLoaded', 'click']
  * Events
  */
 
-function eventMiddleware ({wnd = window, doc = document}) {
+function eventMiddleware (globals = {}) {
+  const {wnd = window, doc = document} = globals
   const map = {}
   const idGen = idGenerator()
 
@@ -26,12 +27,12 @@ function eventMiddleware ({wnd = window, doc = document}) {
     switch (action.type) {
       case HANDLE_EVENT:
         id = idGen()
-        let fn = compose(dispatch, cb)
+        let fn = compose(maybeDispatch, cb)
 
         if (once) {
           fn = e => {
-            dispatch({type: UNHANDLE_EVENT, payload: {id, event}})
-            dispatch(cb(e))
+            maybeDispatch({type: UNHANDLE_EVENT, payload: {id, event}})
+            maybeDispatch(cb(e))
           }
         }
 
@@ -52,6 +53,10 @@ function eventMiddleware ({wnd = window, doc = document}) {
         el.removeEventListener(event, map[id])
         delete map[id]
         return
+    }
+
+    function maybeDispatch(action) {
+      action && dispatch(action)
     }
   }
 }
