@@ -75,7 +75,37 @@ function compose (...fns) {
 }
 
 /**
+ * Action creators
+ */
+
+function handle (event, cb) {
+  return {
+    type: HANDLE_EVENT,
+    payload: {event, cb}
+  }
+}
+
+function handleOnce (event, cb) {
+  return {
+    type: HANDLE_EVENT,
+    payload: {cb, event, once: true}
+  }
+}
+
+function unhandle (event, id) {
+  return {
+    type: UNHANDLE_EVENT,
+    payload: {event, id}
+  }
+}
+
+/**
  * Exports
  */
 
 export default eventMiddleware
+export default {
+  handle,
+  handleOnce,
+  unhandle
+}

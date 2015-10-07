@@ -16,12 +16,12 @@ Provides access to event listeners on `window` and `document`.  Right now the li
 Unbinding handlers works similarly to `setTimeout`/`setInterval`.  Binding a handler will return an id to your composed effect handlers.  You can store that id, and then use it to unbind your handler later:
 
 ```javascript
-import listen from 'declarative-events'
+import {handle} from 'redux-effects-events'
 import bind from 'bind-effect'
 import {createAction} from 'redux-actions'
 
 function initialize () {
-  return bind(listen('DOMContentLoaded', loadApp), boundLoadedListener)
+  return bind(handle('DOMContentLoaded', loadApp), boundLoadedListener)
 }
 
 const loadApp = createAction('LOAD_APP')
