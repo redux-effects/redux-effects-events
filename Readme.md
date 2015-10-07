@@ -17,7 +17,7 @@ Unbinding handlers works similarly to `setTimeout`/`setInterval`.  Binding a han
 
 ```javascript
 import {handle} from 'redux-effects-events'
-import bind from 'bind-effect'
+import {bind} from 'redux-effects'
 import {createAction} from 'redux-actions'
 
 function initialize () {
