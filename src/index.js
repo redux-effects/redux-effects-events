@@ -104,7 +104,7 @@ function unhandle (event, id) {
  */
 
 export default eventMiddleware
-export default {
+export {
   handle,
   handleOnce,
   unhandle
